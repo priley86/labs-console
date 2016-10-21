@@ -10,6 +10,12 @@ class Modal extends React.Component {
     $('#' + this.props.id).modal({keyboard: true, backdrop:true, show: true});
   }
 
+  componentWillUnmount(){
+    $('#' + this.props.id).on('hidden.bs.modal', function () {
+      $(this).data('bs.modal', null);
+    });
+  }
+
   handleClose = (event) => {
     this.props.handleClose(event);
   };

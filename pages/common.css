@@ -4,3 +4,8 @@
   display:inline-block;
   float: right;
 }
+
+.spacing {
+  padding: 10px;
+  margin: 10px;
+}

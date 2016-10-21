@@ -65,11 +65,11 @@ class UsersPage extends React.Component {
       },
       {
         'field': 'firstname',
-        'displayName':'FirstName'
+        'displayName':'First Name'
       },
       {
         'field': 'lastname',
-        'displayName':'LastName'
+        'displayName':'Last Name'
       }
     ];
 
@@ -82,14 +82,13 @@ class UsersPage extends React.Component {
           } else {
             let content = [];
             content.push(<div className="page-header">
-                <h2>{this.state.topologyName}</h2>
+                <h2> Users
+                  <div className={c.float_right}>
+                    <button type="submit" className="btn btn-primary" onClick={this.handleCreate}>Create</button>
+                  </div>
+                </h2>
               </div>
             );
-            content.push(<h3> Users
-              <div className={c.float_right}>
-                <button type="submit" className="btn btn-primary" onClick={this.handleCreate}>Create</button>
-              </div>
-            </h3>);
             content.push(<br/>);
 
             if (this.state.users.length) {

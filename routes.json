@@ -10,16 +10,23 @@
     "chunk": "main"
   },
   {
+    "path": "/topology/:id",
+    "page": "./pages/topology",
+    "chunk": "topology"
+  },
+  {
     "path": "/error",
     "page": "./pages/error",
     "chunk": "main"
   },
   {
-    "path": "/apps",
-    "page": "./pages/apps"
+    "path": "/builds",
+    "page": "./pages/builds",
+    "chunk": "builds"
   },
   {
     "path": "/users",
-    "page": "./pages/users"
+    "page": "./pages/users",
+    "chunk": "users"
   }
 ]

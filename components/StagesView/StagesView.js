@@ -35,11 +35,13 @@ class StagesView extends React.Component {
                   </div>
 
                   <h2 className="card-pf-title">
-                    <span className="pficon pficon-cluster"></span> { stage.display_name }
+                    <span className="pficon pficon-cluster"></span> { stage.name }
                   </h2>
 
                   <ul className="list-unstyled">
-                    <li><span className="pficon pficon-users"></span>  &nbsp; {stage.user_to_role.length } users </li>
+                    <li><span className="pficon pficon-users"></span>  &nbsp; {stage.project_role_bindings.length }
+                      &nbsp; { stage.project_role_bindings.length == 1 ? 'user' : 'users' }
+                    </li>
                   </ul>
                 </div>
               </div>

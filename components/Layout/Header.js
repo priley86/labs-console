@@ -14,8 +14,8 @@ function Header() {
           <span className="icon-bar"></span>
         </button>
         <a href="/" className="navbar-brand">
-          <img className={cx(s.labs_logo, 'navbar-brand-icon')} src="labs-logo.svg" alt=""/>
-          <img className={cx(s.labs_brand, 'navbar-brand-name')} src="labs-brand.png" alt="Red Hat Open Innovation Labs" />
+          <img className={cx(s.labs_logo, 'navbar-brand-icon')} src="/labs-logo.svg" alt=""/>
+          <img className={cx(s.labs_brand, 'navbar-brand-name')} src="/labs-brand.png" alt="Red Hat Open Innovation Labs" />
         </a>
       </div>
       <nav className="collapse navbar-collapse">

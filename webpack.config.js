@@ -39,6 +39,7 @@ var config = {
     // '!!style!css!patternfly/dist/css/patternfly-additions.css',
 
     //js entries
+    'superagent/lib/client.js',
     'jquery-match-height/dist/jquery.matchHeight.js',
     /* The main entry point of your JavaScript application */
     './main.js'],
@@ -73,17 +74,21 @@ var config = {
   },
 
   // The list of plugins for Webpack compiler
-  plugins: [new webpack.optimize.OccurrenceOrderPlugin(), new webpack.DefinePlugin({
+  plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
     'process.env.NODE_ENV': isDebug ? '"development"' : '"production"',
     __DEV__: isDebug
-  }),
+    }),
     // Emit a JSON file with assets paths
     // https://github.com/sporto/assets-webpack-plugin#options
     new AssetsPlugin({
       path: path.resolve(__dirname, './public/dist'),
       filename: 'assets.json',
       prettyPrint: true
-    })],
+    })
+  ],
 
   // Options affecting the normal modules
   module: {

@@ -21,3 +21,11 @@
 hr {
   border-top: 1px solid #ececec;
 }
+
+.list-view-pf-left .pficon.list-view-pf-icon-sm {
+  border: 2px solid transparent;
+}
+
+.list-view-pf-left .pficon.list-view-pf-icon-info {
+  background-color: #f5f5f5;
+}

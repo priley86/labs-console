@@ -1,37 +1,43 @@
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
 import EmptyState from '../../components/EmptyState/EmptyState';
-import CreateTopologyForm from '../../components/Forms/CreateTopologyForm';
-import Engagement from '../../data/engagement';
+import CreateTopologyView from '../../components/CommonViews/CreateTopologyView';
+import labsApi from '../../data/index';
 import history from '../../core/history';
 import constants from '../../core/constants';
 
 class WelcomePage extends React.Component {
 
-  state = { createForm: false };
+  state = { createTopologyView: false };
 
   componentDidMount() {
     document.title = constants.app_title;
   }
 
   handleCreate = (event) => {
-    this.setState({createForm: true});
+    this.setState({createTopologyView: true});
   };
 
   handleSubmit = (event) => {
-    event.preventDefault();
-    //Todo: handle engagement.saveTopology() here
     history.push('/home');
   };
-
+  
   handleCancel = (event) => {
     event.preventDefault();
-    this.setState({createForm: false});
+    this.setState({createTopologyView: false});
   };
-  
+
   componentWillMount(){
-    let engagement = new Engagement();
-    engagement.getTopology().then(topology => {
+    this.checkTopologies();
+  }
+
+  checkTopologies(){
+    //if we already have topologies - relocate to the home view
+    let topologyApi = new labsApi.TopologyApi();
+    topologyApi.topologiesGet((error, topologies, res) => {
+      if(topologies && topologies.length){
+        history.push('/home');
+      }
     });
   }
 
@@ -39,9 +45,10 @@ class WelcomePage extends React.Component {
     return (
       <Layout className="container-fluid">
         {(() => {
-          if(this.state.createForm){
-            return <CreateTopologyForm handleSubmit={this.handleSubmit.bind(this)} 
-                                       handleCancel={this.handleCancel.bind(this)} />;
+          if(this.state.createTopologyView){
+            return <CreateTopologyView handleSubmit={this.handleSubmit.bind(this)}
+                                       handleCancel={this.handleCancel.bind(this)}
+                                       value={{}}/>;
           } else {
             return <EmptyState>
               <div className="blank-slate-pf-icon">
@@ -54,7 +61,7 @@ class WelcomePage extends React.Component {
               <p>To begin, create an application topology for your environment.</p>
               <div className="blank-slate-pf-main-action">
                 <button className="btn btn-primary btn-lg" onClick={this.handleCreate}>
-                  Create Topology
+                  Create Application Topology
                 </button>
               </div>
             </EmptyState>;

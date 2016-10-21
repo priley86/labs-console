@@ -3,18 +3,25 @@ import EmptyState from '../EmptyState/EmptyState';
 
 class CreateUserForm extends React.Component {
 
+  state = { newUser : {} };
+
   static propTypes = {
     handleSubmit: React.PropTypes.func,
-    handleCancel: React.PropTypes.func
+    handleCancel: React.PropTypes.func,
+    value: React.PropTypes.object
   };
 
   handleSubmit = (event) => {
-    this.props.handleSubmit(event);
+    this.props.handleSubmit(event, this.state.newUser);
   };
 
   handleCancel = (event) => {
     this.props.handleCancel(event);
   };
+
+  componentDidMount() {
+    this.setState({newUser: this.props.value});
+  }
 
   render() {
     return (
@@ -24,7 +31,8 @@ class CreateUserForm extends React.Component {
           <div className="form-group">
             <label htmlFor="firstname" className="col-sm-2 control-label required-pf">First Name</label>
             <div className="col-sm-10">
-              <input type="text" className="form-control" id="firstname" required=""/>
+              <input type="text" className="form-control" id="firstname" required=""
+                     value={this.state.newUser.first_name}/>
             </div>
           </div>
           <div className="form-group">
@@ -54,7 +62,7 @@ class CreateUserForm extends React.Component {
           <div className="form-group">
             <label htmlFor="sshkey" className="col-sm-2 control-label">SSH Public Key</label>
             <div className="col-sm-10">
-              <input type="email" className="form-control" id="sshkey" required=""/>
+              <textarea className="form-control" id="sshkey" placeholder="paste your ssh key here..." rows="2" required=""/>
             </div>
           </div>
           <div className="form-group">
