@@ -21,17 +21,6 @@ var UserSchema = new Schema({
   }
 );
 
-UserSchema
-  .path('password')
-  .set(function(password) {
-    this.password = password;
-    this.salt = this.makeSalt();
-    this.hashedPassword = this.encryptPassword(password);
-  })
-  .get(function() {
-    return this.password;
-  });
-
 UserSchema.methods = {
   /**
    * Make salt
@@ -62,12 +51,6 @@ UserSchema.methods = {
 // Validate email is not taken
 UserSchema
   .path('email')
-  .set(function(newValue){
-    if(newValue !== this.email){
-      this._emailChanged = true;
-    }
-    return newValue;
-  })
   .validate(function(value, respond) {
     var self = this;
     this.constructor.findOne({email: value}, function(err, user) {
@@ -79,6 +62,16 @@ UserSchema
       respond(true);
     });
   }, 'This email is already registered.');
+
+/**
+ * Pre Save
+ */
+UserSchema
+  .pre('save', function(next){
+    this.salt = this.makeSalt();
+    this.hashedPassword = this.encryptPassword(this.password);
+    next();
+  });
 
 UserSchema.virtual('id').get(function(){
   return this._id;

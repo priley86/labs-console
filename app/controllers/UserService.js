@@ -44,7 +44,7 @@ exports.updateUser = function(args, res, next) {
   **/
   // no response value expected for this operation
   // res.end();
-  User.findById({id: args.params.id}, function (err, user) {
+  User.findById(args.params.id, function (err, user) {
     if(user) {
       user.first_name = args.body.first_name;
       user.last_name = args.body.last_name;

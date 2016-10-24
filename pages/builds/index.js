@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
 import BuildListView from '../../components/ListView/BuildListView';
-import EmptyState from '../../components/EmptyState/EmptyState';
 import Modal from '../../components/Modal/Modal';
 import labsApi from '../../data/index';
 import constants from '../../core/constants';
@@ -13,8 +12,6 @@ class BuildsPage extends React.Component {
 
   componentDidMount() {
     document.title = constants.app_title;
-    
-    
   }
 
   componentWillMount() {

@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react';
 import Layout from '../../components/Layout';
 import TableView from '../../components/TableView/TableView';
 import CreateUserForm from '../../components/Forms/CreateUserForm';
-import Engagement from '../../data/engagement';
+import labsApi from '../../data/index';
 import constants from '../../core/constants';
 import c from '../common.css'
 
 class UsersPage extends React.Component {
 
-  state = { users: [], createUserView: false };
+  state = { users: [], createUserView: false, user:{}, edit: false };
 
   componentDidMount() {
     document.title = constants.app_title;
@@ -16,37 +16,49 @@ class UsersPage extends React.Component {
 
   componentWillMount() {
     this.getUsers();
-    this.getTopology();
-  }
-
-  getTopology(){
-    let engagement = new Engagement();
-    engagement.getTopology().then(topology => {
-      this.setState({topologyName: topology.name});
-    });
   }
 
   getUsers() {
-    let that = this;
-    fetch(constants.get_users_url).then(r => r.json())
-      .then(data => {
-        that.setState({users : data})
-      })
-      .catch(e => console.log(e));
+    let userApi = new labsApi.UserApi();
+    userApi.usersGet((error, users, res) => {
+      this.setState({users: users});
+    });
   }
 
-  handleRowClick = (event, item) => {
-    alert(item.firstname + ' clicked');
+  handleRowClick = (event, user) => {
+    this.setState({user: user, createUserView: true, edit: true});
   };
 
   handleCreate = (event) => {
-    this.setState({createUserView : true})
+    this.setState({user: {}, createUserView: true, edit: false});
   };
 
-  handleCreateUserSubmit = (event) => {
+  handleCreateUserSubmit = (event, u) => {
+    let userApi = new labsApi.UserApi();
+    let user = new labsApi.User();
+    Object.assign(user, u);
+    if(this.state.edit){
+      //edit mode
+      userApi.updateUser(u.id, {'body': user}, (e) => {
+          //todo: display an error
+          if (e) console.error(e);
+          this.refresh();
+        });
+    } else {
+      //create mode
+      userApi.addUser({'body': user}, (e) => {
+          //todo: display an error
+          if (e) console.error(e);
+          this.refresh();
+        });
+    }
     event.preventDefault();
-    this.setState({createUserView: false});
   };
+
+  refresh() {
+    this.setState({createUserView: false});
+    this.getUsers();
+  }
 
   handleCreateUserCancel = (event) => {
     event.preventDefault();
@@ -56,7 +68,7 @@ class UsersPage extends React.Component {
   render() {
     let columns = [
       {
-        'field': 'username',
+        'field': 'user_name',
         'displayName':'Username'
       },
       {
@@ -64,11 +76,11 @@ class UsersPage extends React.Component {
         'displayName':'Email'
       },
       {
-        'field': 'firstname',
+        'field': 'first_name',
         'displayName':'First Name'
       },
       {
-        'field': 'lastname',
+        'field': 'last_name',
         'displayName':'Last Name'
       }
     ];
@@ -78,7 +90,8 @@ class UsersPage extends React.Component {
         {(() => {
           if(this.state.createUserView){
             return <CreateUserForm handleSubmit={this.handleCreateUserSubmit.bind(this)}
-                                  handleCancel={this.handleCreateUserCancel.bind(this)}/>;
+                                  handleCancel={this.handleCreateUserCancel.bind(this)}
+                                  value={this.state.user}/>;
           } else {
             let content = [];
             content.push(<div className="page-header">
