@@ -54,7 +54,11 @@
      * @type {String}
      * @default https://localhost
      */
-    this.basePath = window.location.protocol + '//' + window.location.host;
+    if(window.location.host.indexOf('localhost') > -1){
+      this.basePath = 'http://localhost:8080'; //point at a local node service running on :8080 if local
+    } else {
+      this.basePath = window.location.protocol + '//' + window.location.host;
+    }
 
     /**
      * The authentication methods to be included for all API calls.
