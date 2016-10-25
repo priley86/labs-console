@@ -1,19 +1,47 @@
 import React, { PropTypes } from 'react';
 import EmptyState from '../EmptyState/EmptyState';
+import AppsListView from '../ListView/AppsListView';
 import CreateAppForm from './CreateAppForm';
-
+import labsApi from '../../data/index';
+import c from '../../pages/common.css';
+import cx from 'classnames';
 
 class CreateProjectForm extends React.Component {
 
-  state = { createProjectView: true, createAppView: false, apps: [] };
+  state = {
+    createProjectView: true,
+    createAppView: false,
+    newProject: {},
+    newApp: {json: ''},
+    type: 'OpenShift'
+  };
 
   static propTypes = {
     handleSubmit: React.PropTypes.func,
-    handleCancel: React.PropTypes.func
+    handleCancel: React.PropTypes.func,
+    topology: React.PropTypes.object,
+    value: React.PropTypes.object
   };
 
   handleSubmit = (event) => {
-    this.props.handleSubmit(event);
+    let topologyApi = new labsApi.TopologyApi();
+    let topology = Object.assign({}, this.props.topology);
+    if(this.state.newProject.id){
+      //existing project, just update
+      let index = topology.project_templates.findIndex((p) => { 
+        return p.id === this.state.newProject.id 
+      });
+      if(index > -1){
+        topology.project_templates[index] = this.state.newProject;
+      }
+    } else {
+      topology.project_templates.push(this.state.newProject);
+    }
+    topologyApi.updateTopology(topology.id, {'body': topology}, (e) => {
+      if(e) console.log(e); //todo: handle error
+      this.props.handleSubmit(event);
+    });
+    event.preventDefault();
   };
 
   handleCancel = (event) => {
@@ -21,44 +49,105 @@ class CreateProjectForm extends React.Component {
   };
 
   handleCreateApp = (event) => {
+    this.setState({createProjectView: false, createAppView: true, newApp: {json:''}});
     event.preventDefault();
-    this.setState({createProjectView: false, createAppView: true});
   };
 
-  handleCreateAppSubmit = (event) => {
+  handleCreateAppSubmit = (event, newApp) => {
+    if(newApp.index){
+      this.state.newProject.apps[newApp.index] = newApp.json;
+    } else {
+      this.state.newProject.apps.push(newApp.json);
+    }
+    this.setState({createProjectView: true, createAppView: false});
     event.preventDefault();
-    this.setState({createProjectView: false, createAppView: true});
   };
 
   handleCreateAppCancel = (event) => {
-    event.preventDefault();
     this.setState({createProjectView: true, createAppView: false});
+    event.preventDefault();
   };
+
+  handleChange = (e, prop) => {
+    let o = Object.assign({}, this.state.newProject);
+    o[prop] = e.target.value;
+    this.setState({newProject: o});
+  };
+
+  handleAppClick = (event, i) => {
+    this.setState(
+      {
+        newApp: {index: i, json: this.state.newProject.apps[i]},
+        createProjectView: false, createAppView: true
+      });
+  };
+
+  handleDelete = (event, i) => {
+    this.state.newProject.apps.splice(i,1);
+    this.setState({newProject: this.state.newProject});
+    event.preventDefault();
+  };
+
+  componentWillMount(){
+    let newProject = Object.assign({}, this.props.value);
+    newProject.apps = newProject.apps || [];
+    this.setState({newProject: newProject});
+  }
 
   render() {
     if(this.state.createProjectView) {
       return (
-        <EmptyState title="Create Project">
-          <form className="form-horizontal" role="form">
+        <EmptyState title={ Object.keys(this.props.value).length === 0 ? 'Create Project' : 'Edit Project'} class="text-left">
+          <form role="form">
             <div className="form-group">
-              <label htmlFor="input1" className="col-sm-2 control-label">Project Name</label>
-              <div className="col-sm-10">
-                <input type="text" className="form-control" id="input1" required="" placeholder="project-name"/>
-              </div>
+              <label  htmlFor="input1">Project Name</label>
+              <input type="text" className="form-control" id="input1" required="" placeholder="project-name"
+                     value={this.state.newProject.name}
+                     onChange={(e) => { this.handleChange(e,'name')}}/>
             </div>
             <div className="form-group">
-              <label htmlFor="input2" className="col-sm-2 control-label">Apps</label>
-              <div className="col-sm-10"></div>
-              <div className="col-sm-12">
-                <h4>Project contains no apps.</h4>
-                <p>Create one or more apps to continue.</p>
-                <button type="submit" className="btn btn-primary" onClick={this.handleCreateApp}>Create App</button>
-              </div>
+              <label >Project Type</label>
+              <br/>
+              <select value={this.state.newProject.type} className="selectpicker form-control"
+                      onChange={(e) => { this.handleChange(e,'type')}}>
+                <option>OpenShift</option>
+                <option>AWS</option>
+                <option>Google Cloud</option>
+                <option>Azure</option>
+                <option>OpenStack</option>
+                <option>VMWare</option>
+              </select>
+            </div>
+            <br/>
+            <div className="form-group">
+              <label>
+                Applications
+              </label>
+              {(() => {
+                if(this.state.newProject.apps.length){
+                  return [
+                    <div className={cx(c.float_right, c.padding_right)}>
+                      <button type="submit" className="btn btn-success" onClick={this.handleCreateApp}>Create</button>
+                    </div>,
+                    <AppsListView apps={this.state.newProject.apps}
+                                       handleAppClick={this.handleAppClick.bind(this)}
+                                       handleDelete={this.handleDelete.bind(this)}/>
+                  ]
+                } else {
+                  return <div className="text-center">
+                    <br/>
+                    <br/>
+                    <h4>Project contains no apps.</h4>
+                    <p>Create one or more apps to continue.</p>
+                    <button type="submit" className="btn btn-success" onClick={this.handleCreateApp}>Create App</button>
+                  </div>
+                }
+              })()}
             </div>
             <br/>
             <br/>
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Create</button>
+            <div className="form-group text-center">
+              <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Save</button>
               &nbsp;&nbsp;
               <button type="submit" className="btn btn-default" onClick={this.handleCancel}>Cancel</button>
             </div>
@@ -68,7 +157,8 @@ class CreateProjectForm extends React.Component {
     } else if (this.state.createAppView){
       return (
         <CreateAppForm handleSubmit={this.handleCreateAppSubmit.bind(this)}
-                       handleCancel={this.handleCreateAppCancel.bind(this)}/>
+                       handleCancel={this.handleCreateAppCancel.bind(this)}
+                       value={ this.state.newApp }/>
       )
     }
   }

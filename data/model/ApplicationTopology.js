@@ -59,6 +59,8 @@
 
 
 
+
+
   };
 
   /**
@@ -75,12 +77,6 @@
       if (data.hasOwnProperty('id')) {
         obj['id'] = ApiClient.convertToType(data['id'], 'Integer');
       }
-      if (data.hasOwnProperty('name')) {
-        obj['name'] = ApiClient.convertToType(data['name'], 'String');
-      }
-      if (data.hasOwnProperty('description')) {
-        obj['description'] = ApiClient.convertToType(data['description'], 'String');
-      }
       if (data.hasOwnProperty('project_templates')) {
         obj['project_templates'] = ApiClient.convertToType(data['project_templates'], [ProjectTemplate]);
       }
@@ -96,6 +92,12 @@
       if (data.hasOwnProperty('datetime_modified')) {
         obj['datetime_modified'] = ApiClient.convertToType(data['datetime_modified'], 'Date');
       }
+      if (data.hasOwnProperty('name')) {
+        obj['name'] = ApiClient.convertToType(data['name'], 'String');
+      }
+      if (data.hasOwnProperty('description')) {
+        obj['description'] = ApiClient.convertToType(data['description'], 'String');
+      }
     }
     return obj;
   }
@@ -104,14 +106,6 @@
    * @member {Integer} id
    */
   exports.prototype['id'] = undefined;
-  /**
-   * @member {String} name
-   */
-  exports.prototype['name'] = undefined;
-  /**
-   * @member {String} description
-   */
-  exports.prototype['description'] = undefined;
   /**
    * @member {Array.<module:model/ProjectTemplate>} project_templates
    */
@@ -133,6 +127,14 @@
    * @member {Date} datetime_modified
    */
   exports.prototype['datetime_modified'] = undefined;
+  /**
+   * @member {String} name
+   */
+  exports.prototype['name'] = undefined;
+  /**
+   * @member {String} description
+   */
+  exports.prototype['description'] = undefined;
 
 
 

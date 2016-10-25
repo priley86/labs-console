@@ -22,7 +22,7 @@ class EmptyState extends React.Component {
               <h1>{ this.props.title }</h1>
             </div>
 
-            <div className="blank-slate-pf">
+            <div className={'blank-slate-pf ' + this.props.class}>
               { this.props.children }
             </div>
 

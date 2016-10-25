@@ -12,6 +12,7 @@ import history from './core/history';
 
 //polyfill scripts
 import objectAssign from './core/object-assign';
+import find from './core/find';
 
 let routes = require('./routes.json'); // Loaded with utils/routes-loader.js
 const container = document.getElementById('main');

@@ -11,20 +11,31 @@ import c from '../common.css'
 
 class TopologyPage extends React.Component {
 
-  state = { projects: [], stages: [], homeView: true, createProjectView: false, topologyName: '' };
+  state = { 
+    projects: [], 
+    stages: [], 
+    homeView: true, 
+    createProjectView: false,
+    createStageView: false,
+    topologyName: '',
+    topology: {},
+    newProject: {},
+    newStage: {}
+  };
 
   componentDidMount() {
     document.title = constants.app_title;
   }
 
   componentWillMount() {
-    this.getTopology(this.props.route.params.id);
+    this.getTopology();
   }
 
-  getTopology(topologyId){
+  getTopology(){
     let topologyApi = new labsApi.TopologyApi();
-    topologyApi.topologiesIdGet(topologyId, (error, topology, res) => {
+    topologyApi.topologiesIdGet(this.props.route.params.id, (error, topology, res) => {
       selectors.isBuildable([topology]);
+      this.setState({topology: topology});
       this.setState({projects: topology.project_templates});
       this.setState({stages: topology.promotion_process});
       this.setState({topologyName: topology.name});
@@ -32,12 +43,12 @@ class TopologyPage extends React.Component {
   }
 
   handleCreateProject = (event) => {
-    event.preventDefault();
     this.setState({homeView: false, createProjectView: true});
+    event.preventDefault();
   };
 
   handleSubmitProject = (event) => {
-    event.preventDefault();
+    this.getTopology(); //refresh
     this.setState({homeView: true, createProjectView: false});
   };
 
@@ -100,7 +111,9 @@ class TopologyPage extends React.Component {
           } else if (this.state.createProjectView){
             //Create Project View Content
             return <CreateProjectForm handleSubmit={this.handleSubmitProject.bind(this)}
-                                      handleCancel={this.handleCancelProject.bind(this)}/>;
+                                      handleCancel={this.handleCancelProject.bind(this)}
+                                      topology={this.state.topology}
+                                      value={this.state.newProject}/>;
           }
         })()}
       </Layout>

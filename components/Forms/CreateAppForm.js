@@ -3,45 +3,55 @@ import EmptyState from '../EmptyState/EmptyState';
 
 class CreateAppForm extends React.Component {
 
+  state = { json : '' };
+
   static propTypes = {
     handleSubmit: React.PropTypes.func,
-    handleCancel: React.PropTypes.func
+    handleCancel: React.PropTypes.func,
+    value: React.PropTypes.object
   };
 
   handleSubmit = (event) => {
-    this.props.handleSubmit(event);
+    try {
+      //try to parse our app json, if it can't be parsed, bail and let them try again
+      let json = JSON.parse(this.state.json);
+      this.props.handleSubmit(event, {json: json, index: this.props.value.index });
+    } catch(e){
+      //todo: show error
+      console.log(e);
+      event.preventDefault();
+    }
   };
 
   handleCancel = (event) => {
     this.props.handleCancel(event);
   };
 
+  handleChange(event) {
+    this.setState({json: event.target.value});
+  }
+
+  componentWillMount(){
+    this.setState({json: this.props.value.json});
+  }
+
   render() {
     return (
       <EmptyState title="Create App">
         <form className="form-horizontal" role="form">
           <div className="form-group">
-            <label htmlFor="input1" className="col-sm-2 control-label">App Name</label>
+            <label htmlFor="input1" className="col-sm-2 control-label">Application</label>
             <div className="col-sm-10">
-              <input type="text" className="form-control" id="input1" required="" placeholder="app-name"/>
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="input1" className="col-sm-2 control-label">SCM Url</label>
-            <div className="col-sm-10">
-              <input type="text" className="form-control" id="input1" required="" placeholder="https://github.com/acme/UI.git"/>
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="input1" className="col-sm-2 control-label">Base Image</label>
-            <div className="col-sm-10">
-              <input type="text" className="form-control" id="input1" required="" placeholder="openshift/httpd:latest"/>
+              <textarea type="text" className="form-control" id="input1" required="" rows="10"
+                        placeholder="paste application json..."
+                        value={this.state.json}
+                        onChange={(e) => {this.handleChange(e)}}/>
             </div>
           </div>
           <br/>
           <br/>
           <div className="form-group">
-            <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Create</button>
+            <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Add</button>
             &nbsp;&nbsp;
             <button type="submit" className="btn btn-default" onClick={this.handleCancel}>Cancel</button>
           </div>

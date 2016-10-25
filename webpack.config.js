@@ -40,7 +40,6 @@ var config = {
 
     //js entries
     'superagent/lib/client.js',
-    'jquery-match-height/dist/jquery.matchHeight.js',
     /* The main entry point of your JavaScript application */
     './main.js'],
 

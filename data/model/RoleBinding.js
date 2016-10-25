@@ -23,17 +23,17 @@
  */
 
 (function(root, factory) {
-  if (typeof module === 'object' && module.exports) {
+if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'));
+    module.exports = factory(require('../ApiClient'), require('./User'));
   } else {
     // Browser globals (root is window)
     if (!root.RedHatOpenInnovationLabsConsoleApi) {
       root.RedHatOpenInnovationLabsConsoleApi = {};
     }
-    root.RedHatOpenInnovationLabsConsoleApi.RoleBinding = factory(root.RedHatOpenInnovationLabsConsoleApi.ApiClient);
+    root.RedHatOpenInnovationLabsConsoleApi.RoleBinding = factory(root.RedHatOpenInnovationLabsConsoleApi.ApiClient, root.RedHatOpenInnovationLabsConsoleApi.User);
   }
-}(this, function(ApiClient) {
+}(this, function(ApiClient, User) {
   'use strict';
 
 
@@ -49,7 +49,7 @@
    * Constructs a new <code>RoleBinding</code>.
    * @alias module:model/RoleBinding
    * @class
-   * @param user {String} 
+   * @param user {module:model/User} 
    * @param role {module:model/RoleBinding.RoleEnum} 
    */
   var exports = function(user, role) {
@@ -75,7 +75,7 @@
         obj['id'] = ApiClient.convertToType(data['id'], 'Integer');
       }
       if (data.hasOwnProperty('user')) {
-        obj['user'] = ApiClient.convertToType(data['user'], 'String');
+        obj['user'] = User.constructFromObject(data['user']);
       }
       if (data.hasOwnProperty('role')) {
         obj['role'] = ApiClient.convertToType(data['role'], 'String');
@@ -89,7 +89,7 @@
    */
   exports.prototype['id'] = undefined;
   /**
-   * @member {String} user
+   * @member {module:model/User} user
    */
   exports.prototype['user'] = undefined;
   /**

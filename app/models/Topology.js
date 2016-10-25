@@ -3,10 +3,27 @@ var mongoose = require('mongoose'),
 var validate = require('mongoose-validator');
 var autoIncrement = require('mongoose-auto-increment');
 
+var ProjectSchema = new Schema({
+  name: {type: String, required: true},
+  type: {type: String },
+  apps: { type : Array , "default" : [] },
+  persistent_volume_claim_templates: { type : Array , "default" : [] }
+});
+
+ProjectSchema.virtual('id').get(function(){
+  return this._id;
+});
+
+ProjectSchema.set('toJSON', {
+  virtuals: true
+});
+ProjectSchema.plugin(autoIncrement.plugin, 'Project');
+
+
 var TopologySchema = new Schema({
     name: {type: String, required: true},
     description: {type: String},
-    project_templates: {type: [Object]},
+    project_templates: [ProjectSchema],
     promotion_process: {type: [Object]}
   },
   {

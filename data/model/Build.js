@@ -58,7 +58,6 @@
 
 
 
-
   };
 
   /**
@@ -77,9 +76,6 @@
       }
       if (data.hasOwnProperty('topology')) {
         obj['topology'] = ApplicationTopology.constructFromObject(data['topology']);
-      }
-      if (data.hasOwnProperty('topology_version')) {
-        obj['topology_version'] = ApiClient.convertToType(data['topology_version'], 'Integer');
       }
       if (data.hasOwnProperty('ansible_tower_link')) {
         obj['ansible_tower_link'] = ApiClient.convertToType(data['ansible_tower_link'], 'String');
@@ -103,10 +99,6 @@
    */
   exports.prototype['topology'] = undefined;
   /**
-   * @member {Integer} topology_version
-   */
-  exports.prototype['topology_version'] = undefined;
-  /**
    * @member {String} ansible_tower_link
    */
   exports.prototype['ansible_tower_link'] = undefined;
@@ -123,3 +115,5 @@
 
   return exports;
 }));
+
+

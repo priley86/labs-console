@@ -25,15 +25,15 @@
 (function(root, factory) {
   if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('./RoleBinding'));
+    module.exports = factory(require('../ApiClient'), require('./RoleBinding'), require('./User'));
   } else {
     // Browser globals (root is window)
     if (!root.RedHatOpenInnovationLabsConsoleApi) {
       root.RedHatOpenInnovationLabsConsoleApi = {};
     }
-    root.RedHatOpenInnovationLabsConsoleApi.Stage = factory(root.RedHatOpenInnovationLabsConsoleApi.ApiClient, root.RedHatOpenInnovationLabsConsoleApi.RoleBinding);
+    root.RedHatOpenInnovationLabsConsoleApi.Stage = factory(root.RedHatOpenInnovationLabsConsoleApi.ApiClient, root.RedHatOpenInnovationLabsConsoleApi.RoleBinding, root.RedHatOpenInnovationLabsConsoleApi.User);
   }
-}(this, function(ApiClient, RoleBinding) {
+}(this, function(ApiClient, RoleBinding, User) {
   'use strict';
 
 
@@ -84,7 +84,7 @@
         obj['project_role_bindings'] = ApiClient.convertToType(data['project_role_bindings'], [RoleBinding]);
       }
       if (data.hasOwnProperty('application_promoters')) {
-        obj['application_promoters'] = ApiClient.convertToType(data['application_promoters'], ['String']);
+        obj['application_promoters'] = ApiClient.convertToType(data['application_promoters'], [User]);
       }
     }
     return obj;
@@ -107,7 +107,7 @@
    */
   exports.prototype['project_role_bindings'] = undefined;
   /**
-   * @member {Array.<String>} application_promoters
+   * @member {Array.<module:model/User>} application_promoters
    */
   exports.prototype['application_promoters'] = undefined;
 

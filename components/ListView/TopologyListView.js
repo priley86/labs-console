@@ -24,7 +24,6 @@ class TopologyListView extends React.Component {
     $(".list-group-item.topology-group-item").click((e) => {
       //check if clicked element is not our "Build" <button>
       if(!$(e.target).is('button')) {
-        console.log('fired');
         this.props.handleTopologyClick(e, $(e.currentTarget).attr('data-id'))
       }
     });
