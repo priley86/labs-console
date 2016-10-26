@@ -4,6 +4,7 @@ import Link from '../../components/Link';
 import ProjectListView from '../../components/ListView/ProjectListView';
 import StagesView from '../../components/StagesView/StagesView';
 import CreateProjectForm from '../../components/Forms/CreateProjectForm';
+import CreateStageForm from '../../components/Forms/CreateStageForm';
 import labsApi from '../../data/index';
 import selectors from '../../data/selectors';
 import constants from '../../core/constants';
@@ -57,6 +58,12 @@ class TopologyPage extends React.Component {
     this.setState({homeView: true, createProjectView: false});
   };
 
+  handleDefine = (event) =>
+  {
+    this.setState({homeView: false, createStageView: true});
+    event.preventDefault();
+  };
+
   render() {
     return (
       <Layout className="container-fluid container-pf-nav-pf-vertical" nav= { true }>
@@ -73,13 +80,16 @@ class TopologyPage extends React.Component {
                   <li className="active"> <strong>Topology:</strong>
                     &nbsp; { this.state.topologyName }
                   </li>
+                  <div className={c.float_right}>
+                    <button type="submit" className="btn btn-danger" onClick={this.handleCreate} disabled={!this.state.projects.length || !this.state.stages.length}>Build</button>
+                  </div>
                 </ol>
               </div>);
 
             content.push(
               <h3> Build Stages
                 <div className={c.float_right}>
-                  <button type="submit" className="btn btn-danger" onClick={this.handleCreate} disabled={!this.state.projects.length}>Build</button>
+                  <button type="submit" className="btn btn-default" onClick={this.handleDefine}>Define</button>
                 </div>
               </h3>
             );
@@ -89,6 +99,9 @@ class TopologyPage extends React.Component {
             } else if(!this.state.projects.length) {
               content.push(<h4>No topology to build.</h4>);
               content.push(<p>A topology can't be built into a stage until it contains at least one project. Create a project first.</p>)
+            } else if(!this.state.stages.length) {
+              content.push(<h4>No topology to build.</h4>);
+              content.push(<p>A topology can't be built until you've defined a promotion process. Create your stages first.</p>)
             } else {
               content.push(<h4>Ready to build topology.</h4>);
               content.push(<p>Hit the build button when ready to build your application topology.</p>)
@@ -114,6 +127,11 @@ class TopologyPage extends React.Component {
                                       handleCancel={this.handleCancelProject.bind(this)}
                                       topology={this.state.topology}
                                       value={this.state.newProject}/>;
+          } else if (this.state.createStageView){
+            return <CreateStageForm handleSubmit={this.handleSubmitProject.bind(this)}
+                                      handleCancel={this.handleCancelProject.bind(this)}
+                                      topology={this.state.topology}
+                                      value={this.state.newProject}/>
           }
         })()}
       </Layout>
