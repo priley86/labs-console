@@ -12,10 +12,10 @@ import c from '../common.css'
 
 class TopologyPage extends React.Component {
 
-  state = { 
-    projects: [], 
-    stages: [], 
-    homeView: true, 
+  state = {
+    projects: [],
+    stages: [],
+    homeView: true,
     createProjectView: false,
     createStageView: false,
     topologyName: '',
@@ -72,7 +72,7 @@ class TopologyPage extends React.Component {
             let content = [];
             //Home View Content
             content.push(
-              <div className="page-header">
+              <div className="page-header" key="topologies-page-header">
                 <ol className="breadcrumb">
                   <li>
                     <Link to="/home">Back to Topologies</Link>
@@ -87,38 +87,38 @@ class TopologyPage extends React.Component {
               </div>);
 
             content.push(
-              <h3> Build Stages
-                <div className={c.float_right}>
+              <h3 key="topologies-build-stages"> Build Stages
+                <span className={c.float_right}>
                   <button type="submit" className="btn btn-default" onClick={this.handleDefine}>Define</button>
-                </div>
+                </span>
               </h3>
             );
 
             if(this.state.stages.length){
-              content.push(<StagesView stages={ this.state.stages } />);
+              content.push(<StagesView stages={ this.state.stages } key="topologies-stages"/>);
             } else if(!this.state.projects.length) {
-              content.push(<h4>No topology to build.</h4>);
-              content.push(<p>A topology can't be built into a stage until it contains at least one project. Create a project first.</p>)
+              content.push(<h4 key="topologies-no-topologies">No topology to build.</h4>);
+              content.push(<p key="topologies-no-topologies-message">A topology can't be built into a stage until it contains at least one project. Create a project first.</p>)
             } else if(!this.state.stages.length) {
-              content.push(<h4>No topology to build.</h4>);
-              content.push(<p>A topology can't be built until you've defined a promotion process. Create your stages first.</p>)
+              content.push(<h4 key="topologies-no-topologies-2">No topology to build.</h4>);
+              content.push(<p key="topologies-no-topologies-message-2">A topology can't be built until you've defined a promotion process. Create your stages first.</p>)
             } else {
-              content.push(<h4>Ready to build topology.</h4>);
-              content.push(<p>Hit the build button when ready to build your application topology.</p>)
+              content.push(<h4 key="topologies-ready">Ready to build topology.</h4>);
+              content.push(<p key="topologies-ready-message">Hit the build button when ready to build your application topology.</p>)
             }
 
-            content.push(<hr/>);
+            content.push(<hr key="topologies-hr"/>);
             content.push(
-              <h3> Projects
+              <h3 key="topologies-projects"> Projects
                 <div className={c.float_right}>
                   <button type="submit" className="btn btn-primary" onClick={this.handleCreateProject}>Create</button>
                 </div>
               </h3>);
             if(this.state.projects.length){
-              content.push(<ProjectListView projects={ this.state.projects }/>);
+              content.push(<ProjectListView projects={ this.state.projects } key="topologies-project-list-view"/>);
             } else{
-              content.push(<h4>No projects exist.</h4>);
-              content.push(<p>Hit the create button to add projects to your application topology.</p>)
+              content.push(<h4 key="topologies-no-projects">No projects exist.</h4>);
+              content.push(<p key="topologies-no-projects-message">Hit the create button to add projects to your application topology.</p>)
             }
             return content;
           } else if (this.state.createProjectView){

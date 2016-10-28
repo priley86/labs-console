@@ -56,7 +56,7 @@ class BuildsPage extends React.Component {
     $('#' + this.startBuildModalId).modal('hide');
   }
 
-  
+
   startBuild = (event) => {
     event.preventDefault();
     this.hideStartBuildModal();
@@ -69,7 +69,7 @@ class BuildsPage extends React.Component {
       <Layout className="container-fluid container-pf-nav-pf-vertical" nav={ true }>
         {(() => {
           let content = [];
-          content.push(<div className="page-header">
+          content.push(<div className="page-header" key="builds-page-header">
               <h2> Builds
                 <div className={c.float_right}>
                   <button type="submit" className="btn btn-info" onClick={this.handleRefresh}>Refresh</button>
@@ -79,15 +79,17 @@ class BuildsPage extends React.Component {
           );
 
           if (this.state.builds.length) {
-            content.push(<BuildListView builds={ this.state.builds } 
+            content.push(<BuildListView builds={ this.state.builds }
                                         handleBuild={this.handleBuild.bind(this)}
-                                        handleDelete={this.handleDelete.bind(this)}/>);
+                                        handleDelete={this.handleDelete.bind(this)}
+                                        key="builds-list-view"/>);
           } else {
-            content.push(<h4>No current builds.</h4>);
-            content.push(<p>You must create an application topology first before running a build.</p>);
+            content.push(<h4 key="builds-no-builds">No current builds.</h4>);
+            content.push(<p key="builds-no-topology-message">You must create an application topology first before running a build.</p>);
           }
           if(this.state.startBuildModal){
-            content.push(<Modal id={this.startBuildModalId} handleClose={this.handleCloseStart.bind(this)}>
+            content.push(<Modal id={this.startBuildModalId} handleClose={this.handleCloseStart.bind(this)}
+                                key="builds-modal">
               <div className="text-center">
                 <h3>Build Application Topology</h3>
                 <div className={c.spacing}>

@@ -94,7 +94,7 @@ class UsersPage extends React.Component {
                                   value={this.state.user}/>;
           } else {
             let content = [];
-            content.push(<div className="page-header">
+            content.push(<div className="page-header" key="users-page-header">
                 <h2> Users
                   <div className={c.float_right}>
                     <button type="submit" className="btn btn-primary" onClick={this.handleCreate}>Create</button>
@@ -102,13 +102,14 @@ class UsersPage extends React.Component {
                 </h2>
               </div>
             );
-            content.push(<br/>);
+            content.push(<br key="users-page-br"/>);
 
             if (this.state.users.length) {
-              content.push(<TableView columns={ columns } data ={ this.state.users } handleRowClick={this.handleRowClick}/>);
+              content.push(<TableView columns={ columns } data ={ this.state.users } handleRowClick={this.handleRowClick}
+                                      key="users-table-view"/>);
             } else {
-              content.push(<h4>No users exist.</h4>);
-              content.push(<p>Hit the create button to add users.</p>);
+              content.push(<h4 key="users-no-users">No users exist.</h4>);
+              content.push(<p key="users-add-users-message">Hit the create button to add users.</p>);
             }
             return content;
           }
